@@ -1,11 +1,10 @@
 """Тест типа данных Task."""
-
+import pytest
 from collections import namedtuple
 Task = namedtuple('Task', ['summary', 'owner', 'done', 'id'])
 
 # Для создания объектов Task без указания всех полей.
 Task.__new__.__defaults__ = (None, None, False, None)
-
 
 def test_asdict():
     """_asdict должен возвращать словарь."""

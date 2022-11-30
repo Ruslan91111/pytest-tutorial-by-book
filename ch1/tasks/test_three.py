@@ -1,5 +1,5 @@
 from collections import namedtuple
-
+import pytest
 
 Task = namedtuple('Task', ['summary', 'owner', 'done', 'id'])
 
@@ -11,6 +11,8 @@ def test_defaults():
     t1 = Task()
     t2 = Task(None, None, False, None)
     assert t1 == t2
+
+
 
 def test_member_access():
     """Проверка свойства .field (поля) namedtuple."""
