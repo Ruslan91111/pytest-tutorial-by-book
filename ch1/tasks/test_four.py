@@ -1,13 +1,15 @@
 """Тест типа данных Task."""
-import pytest
+
+
 from collections import namedtuple
 Task = namedtuple('Task', ['summary', 'owner', 'done', 'id'])
 
 # Для создания объектов Task без указания всех полей.
 Task.__new__.__defaults__ = (None, None, False, None)
 
+
 def test_asdict():
-    """_asdict должен возвращать словарь."""
+    """функция "_asdict" должна возвращать словарь."""
     t_task = Task('do something', 'okken', True, 21)
     t_dict = t_task._asdict()
     expected = {
@@ -18,8 +20,12 @@ def test_asdict():
 
     assert t_dict == expected
 
+
 def test_replace():
-    """Должно изменить переданное в fields"""
+    """
+    Проверка функции replace.
+    Должно изменить переданное в fields.
+    """
     t_before = Task('finish book', 'brian', False)
     t_after = t_before._replace(id=10, done=True)
     t_expected = Task('finish book', 'brian', True, 10)
