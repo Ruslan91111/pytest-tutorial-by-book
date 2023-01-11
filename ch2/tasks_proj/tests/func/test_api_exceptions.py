@@ -33,4 +33,22 @@ def test_get_raises():
         tasks.get(task_id='123')
 
 
+class TestUpdate():
+    """Тест ожидаемых исключений с tasks.update()."""
+
+    def test_bad_id(self):
+        """Не int в id поднять исключение."""
+        with pytest.raises(TypeError):
+            tasks.update(task_id={'dict instead': 1},
+                         task=tasks.Task)
+
+    def test_bad_task(self):
+        """A non-Task task должен поднять exception,
+        а именно: вторым аргументом мы должны передать экземпляр
+        именованного кортежа Task, а в этом тесте мы передаем str"""
+        with pytest.raises(TypeError):
+            tasks.update(task_id=1, task='not a task')
+
+
+
 
