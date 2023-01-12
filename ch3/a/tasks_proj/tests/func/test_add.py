@@ -17,4 +17,14 @@ def test_add_returns_valid_id(tasks_db):
     assert isinstance(task_id, int)
 
 
+def test_add_increases_count(db_with_3_tasks):
+    """Test tasks.add() должен повлиять на tasks.count()."""
+    # GIVEN - db с 3 задачами
+    # WHEN - добавляется ещё одна задача
+    tasks.add(Task('throw a party'))
+
+    # THEN - счетчик увеличивается на 1
+    assert tasks.count() == 4
+
+
 
