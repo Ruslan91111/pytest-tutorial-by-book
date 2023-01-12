@@ -4,14 +4,19 @@ import tasks
 from tasks import Task
 
 
+@pytest.fixture(scope='session')
+def tasks_db_session(tmpdir_factory):
+    """ Подключение к БД перед тестами, отключение после."""
+    temp_dir = tmpdir_factory.mktemp('temp')
+    tasks.start_tasks_db(str(temp_dir), 'tiny')
+    yield
+    tasks.stop_tasks_db()
+
+
 @pytest.fixture()
 def tasks_db(tmpdir):
-    """ Подключение к БД перед тестами, отключение после."""
-    # setup
-    tasks.start_tasks_db(str(tmpdir), 'tiny')
-    yield
-    # teardown
-    tasks.stop_tasks_db()
+    """Опустошить БД"""
+    tasks.delete_all()
 
 
 # фикстура с тремя разными разными данными
