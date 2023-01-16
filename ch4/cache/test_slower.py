@@ -13,7 +13,7 @@ import pytest
 # Код до yield - до тестовой функции; код после yield - после тестовой функции.
 @pytest.fixture(autouse=True)
 def check_duration(request, cache):
-    key = 'duration/' + request.node.nodeit.replace(':', '_')
+    key = 'duration/' + request.node.nodeid.replace(':', '_')
     # идентификатор узла (nodeid) может иметь двоеточия
     # ключи становятся именами файлов внутри .cache
     # меняем двоеточия на что-то безопасное в имени файла
