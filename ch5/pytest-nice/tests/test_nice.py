@@ -62,7 +62,27 @@ def test_not_nice_verbose(sample_test):
     assert result.ret == 1
 
 
+# Убедимся, что наше благодарственное сообщение находится в заголовке.
+def test_header(sample_test):
+    result = sample_test.runpytest('--nice')
+    result.stdout.fnmatch_lines(['Thanks for running the tests.'])
 
+
+def test_header_not_nice(sample_test):
+    result = sample_test.runpytest()
+    thanks_message = 'Thanks for running the tests.'
+    assert thanks_message not in result.stdout.str()
+
+
+# Проверить текст справки.
+def test_help_message(testdir):
+    result = testdir.runpytest('--help')
+
+    # fnmatch_lines делает внутренний ассерт
+    result.stdout.fnmatch_lines([
+        'nice:',
+        '*--nice*nice: turn FAILED into OPPORTUNITY for improvement'
+    ])
 
 
 
