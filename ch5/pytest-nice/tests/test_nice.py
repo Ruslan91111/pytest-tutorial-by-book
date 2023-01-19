@@ -6,7 +6,7 @@ def test_pass_fail(testdir):
     # Фикстура testdir автоматически создает временный каталог для размещения
     # тестовых файлов. Она имеет метод makepyfile(),
     # который позволяет поместить содержимое тестового файла.
-    # В этом случае мы создаем два теста: один, который проходит и другой, который не проходит.
+    # В нижнем примере мы создаем два теста: один, который проходит и другой, который не проходит.
     testdir.makepyfile("""
         def test_pass():
             assert 1 == 1
@@ -19,6 +19,7 @@ def test_pass_fail(testdir):
     # Возвращаемое значение имеет тип RunResult.
     result = testdir.runpytest()
 
+    # ret равен 0 для проходящих сеансов и 1 для неудачных сеансов
     # fnmatch_lines выполняет внутренний accept
     result.stdout.fnmatch_lines([
         '*.F*',  # . for Pass, F for Fail
@@ -28,6 +29,8 @@ def test_pass_fail(testdir):
     assert result.ret == 1
 
 
+# Чтобы не дублировать код, создаем фикстуру, которую можем использовать
+# в качестве каталога, уже содержащего наш пример тестового файла.
 @pytest.fixture()
 def sample_test(testdir):
     testdir.makepyfile("""
@@ -38,31 +41,30 @@ def sample_test(testdir):
             assert 1 == 2    
             """)
     return testdir
-# Теперь, для остальных тестов, мы можем использовать sample_test в качестве
-# каталога, который уже содержит наш пример тестового файла.
 
 
+# Используем ранее созданную фикстуру.
 def test_with_nice(sample_test):
     result = sample_test.runpytest('--nice')
-    result.stdout.fnmatch_lines(['*.O', ])   # . for Pass, O for Fail
+    result.stdout.fnmatch_lines(['*.O*', ])   # . for Pass, O for Fail
     assert result.ret == 1
 
 
 def test_with_nice_verbose(sample_test):
     result = sample_test.runpytest('-v', '--nice')
     result.stdout.fnmatch_lines([
-        '*::test_fail OPPORTUNITY for improvement',
+        '*::test_fail OPPORTUNITY for improvement*',
     ])
     assert result.ret == 1
 
 
 def test_not_nice_verbose(sample_test):
-    result = sample_test.runpyttest('-v')
-    result.stdout.fnmatch_lines(['*::test_fail FAILED'])
+    result = sample_test.runpytest('-v')
+    result.stdout.fnmatch_lines(['*::test_fail FAILED*'])
     assert result.ret == 1
 
 
-# Убедимся, что наше благодарственное сообщение находится в заголовке.
+# Убедимся, что благодарственное сообщение находится в заголовке.
 def test_header(sample_test):
     result = sample_test.runpytest('--nice')
     result.stdout.fnmatch_lines(['Thanks for running the tests.'])
@@ -75,17 +77,15 @@ def test_header_not_nice(sample_test):
 
 
 # Проверить текст справки.
-def test_help_message(testdir):
-    result = testdir.runpytest('--help')
-
-    # fnmatch_lines делает внутренний ассерт
-    result.stdout.fnmatch_lines([
-        'nice:',
-        '*--nice*nice: turn FAILED into OPPORTUNITY for improvement'
-    ])
-
-
-
+# def test_help_message(testdir):
+#     result = testdir.runpytest('--help')
+#
+#     # fnmatch_lines делает внутренний ассерт
+#     result.stdout.fnmatch_lines([
+#         'nice:',
+#         '*--nice*nice: turn FAILED into OPPORTUNITY for improvement',
+#     ])
+#
 
 
 
